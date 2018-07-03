@@ -1,8 +1,0 @@
-###
-	Test for safely wrapping calling printf().
-
-$hello_world
-	|C|
-		printf("Hello, world\n")
-
-safe$hello_world

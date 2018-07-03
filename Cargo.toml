@@ -1,6 +1,16 @@
+# Nahar - Plop Grizzly - <jeron.lau@plopgrizzly.com>
+#
+# Copyright Jeron A. Lau 2018.
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE.md or copy at
+# https://www.boost.org/LICENSE_1_0.txt)
+
 [package]
-name = "splat"
+name = "nr"
 version = "0.1.0"
-authors = ["Jeron A. Lau <jeron.lau@plopgrizzly.com>"]
+authors = [
+	"Jeron A. Lau <jeron.lau@plopgrizzly.com>",
+]
+license = "BSL-1.0"
 
 [dependencies]

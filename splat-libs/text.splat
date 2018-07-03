@@ -1,5 +1,0 @@
-###
-The Text module
-###
-
-chars: List<U8> = List()

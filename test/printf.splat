@@ -1,5 +1,0 @@
-###
-	Test for unsafely calling printf().
-
-|C|
-	printf("Hello, world\n")

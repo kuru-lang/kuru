@@ -1,9 +1,0 @@
-###
-The Command Line standard library module
-###
-
-$ TEXT:Text
-	
-
-% -> Future<Text>
-	
