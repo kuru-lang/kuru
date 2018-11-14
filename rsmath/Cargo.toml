@@ -1,0 +1,6 @@
+[package]
+name = "rsmath"
+version = "0.1.0"
+authors = ["Jeron Lau <jeron.lau@plopgrizzly.com>"]
+
+[dependencies]
