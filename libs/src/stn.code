@@ -1,0 +1,74 @@
+# Aldaron's Code Standard Library (~) - Plop Grizzly - <jeron.lau@plopgrizzly.com>
+#
+# Copyright Jeron A. Lau 2018.
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE.md or copy at
+# https://www.boost.org/LICENSE_1_0.txt)
+
+###########
+### FFI ###
+###########
+
+# `int putchar(int c);`
+putchar c Si32; Si32
+
+# `int getchar(void);`
+getchar; Si32
+
+#############
+### Types ###
+#############
+
+Opt Some T, None
+
+####################
+### Module State ###
+####################
+
+$ input_line ""
+
+#################
+### Functions ###
+#################
+
+### Terminal ###
+
+## Display a character in the terminal.
+char c Char; .
+    # Cast char to Si32 before passing to FFI.
+    putchar
+        c: Si32 c
+
+## Print text out to the terminal, without newline.
+text text @Text; .
+    text.iter $ c
+        char
+            c: c
+
+## Print a line out to the terminal.
+print text: @Text; .
+    text
+        text: text + '\n'
+
+## Get command line input, if a character has been entered. 
+in; Opt Char
+    Char getchar
+
+## Get next line from terminal, if it exists.
+line; Opt Str
+    in
+        = Some '\n'
+            $ return: input_line
+            input_line: ""
+            Some return
+        = Some $ x
+            input_line+: x
+            None
+        = None
+            None
+
+### TODO: other stuff ###
+
+###########
+### END ###
+###########
