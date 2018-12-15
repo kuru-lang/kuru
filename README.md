@@ -2,9 +2,33 @@
 A simple programming language inspired by Rust and Python.  The goal is to have
 the features of Rust with a Python-like syntax and no keywords.
 
+Easy, Safe, Fast.
+
+## Parts:
+* nahar - Nahar build tool.
+* naharc - Nahar Compiler/Decompiler/Transpiler/Assembler CLI (.c/.rs/.py to .nr, .nr to .c/.rs/.na, .na to .nb, .nb to executable)
+* nahara - Nahar assembler (.nr to .nb)
+* naharp - Nahar Package Manager "Harp Software Manager" CLI+GUI{Logo: Grey Harp (on a red stand)}
+* naharg - "Nahar IDE" GUI{Logo: White Horse (in green field)} (Supports Nahar, Rust, C, Python)
+* nahare - Nahar Desktop Environment "NaHare" GUI{Logo: Black Rabbit (in a blue river)}
+
+## Compiling Chain
+```bash
+# 1. Compile Nahar to portable Nahar Assembly (nahara) [main.code -> main.nasm].
+naharc main.code
+# 2. Assemble Nahara to Nahar Executable Bytecode [main.na -> main.napp].
+nahara main.nasm
+# 3. Install Program (Nahar Bytecode to Executable) [main.nha -> /path/to/install/location/main.exe].
+naharp main.harp
+```
+
 ## Types
 `Si7` is rounded up to `Si8`, and the additional bit may be filled by `Opt`.
 
+* `Byte1`: Unknown Data 1 byte
+* `Byte2`: Unknown Data 2 bytes
+* `Byte4`: Unknown Data 4 bytes
+* `Byte8`: Unknown Data 8 bytes
 * `Si8`: Signed int 8-bit.
 * `Si16`: Signed int 16-bit.
 * `Si32`: Signed int 32-bit.
@@ -61,6 +85,10 @@ Struct
 ### :
 * `mut_var: 4 // declare or set a mutable variable`
 * `CONST_VAR: 5 // declare a constant`
+
+### ::
+* `mut_var:: 4 // copy a value into mutable variable`
+* `CONST_VAR:: 5 // copy a value into a constant`
 
 ### =
 * `false: 1 = 2 // compare equality`

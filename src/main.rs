@@ -35,6 +35,7 @@ fn main() -> std::io::Result<()> {
 	let args: Vec<String> = env::args().collect();
 	if args.len() < 2 {
 		println!("usage: nr <input_filename.nr>");
+		println!("usage: nr <>");
 		::std::process::exit(255);
 	}
 
