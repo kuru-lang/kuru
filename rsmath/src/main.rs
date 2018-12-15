@@ -1,4 +1,4 @@
-// Iterative Greatest Common Divisor `~math.gcd.i`.
+// Iterative Greatest Common Divisor `.math.gcd.i`.
 pub fn gcd_i(mut a: u32, mut b: u32) -> u32 {
     if a == 0 {
         return b;
@@ -18,7 +18,7 @@ pub fn gcd_i(mut a: u32, mut b: u32) -> u32 {
     }
 }
 
-// Recursive Greatest Common Divisor `~math.gcd.r`.
+// Recursive Greatest Common Divisor `.math.gcd.r`.
 pub fn gcd_r(mut a: u32, b: u32) -> u32 {
     if a == 0 {
         return b;
@@ -34,6 +34,39 @@ pub fn gcd_r(mut a: u32, b: u32) -> u32 {
     } else {
         gcd_r(a, new_b)
     }
+}
+
+// Hoare's recursive quicksort (middle element is pivot) `.math.hquicksort.r`
+pub fn hquicksort_r(array: &mut [u32]) {
+    if array.len() < 2 { return; } // 0 or 1.
+
+    let mut first = std::usize::MAX;
+    let mut last = array.len();
+    let mid = (last - 1) >> 1; // Shift right to divide by two (floor).
+    let piv = array[mid]; // Pivot.
+
+    // Continuously loop (bringing ends closer together).
+    let pivot_index = loop {
+        first = first.wrapping_add(1);
+        while array[first] < piv {
+            first += 1;
+        }
+
+        last -= 1;
+        while array[last] > piv {
+            last -= 1;
+        }
+
+        if first >= last {
+            break last;
+        }
+
+        array.swap(first, last);
+    };
+
+    hquicksort_r(&mut array[0..(pivot_index+1)]);
+    let end = array.len();
+    hquicksort_r(&mut array[(pivot_index+1)..end]);
 }
 
 /// Unsigned 8 Bit Fixed Point (4.4: 0-31)
@@ -98,17 +131,37 @@ pub struct Sf8(i32);
 /// -32_768 = NaN
 /// 32_767 = +Infinity
 /// -32_767 = -Infinity
-pub struct Num(i32);
+pub struct Num4(i32);
 
-impl Num {
-    pub fn new(whole: i16, fraction: u16) -> Num {
-        Num4((whole as i32 << -16) | (fraction as i32))
+impl Num4 {
+    pub fn new(whole: i16, fraction: u16) -> Num4 {
+        Num4(((whole as i32) << -16) | (fraction as i32))
     }
 }
 
 /// 
 
 fn main() {
+    let mut array_a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let mut array_b = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+    let mut array_c = [1, 1, 2, 3, 6, 5, 6, 0, 9, 9];
+    let mut array_d = [10, 40, 3, 3, 40, 10, 0, 0, 9, 10];
+
+    println!("Unsorted: {:?}", array_a);
+    println!("Unsorted: {:?}", array_b);
+    println!("Unsorted: {:?}", array_c);
+    println!("Unsorted: {:?}", array_d);
+
+    hquicksort_r(&mut array_a);
+    hquicksort_r(&mut array_b);
+    hquicksort_r(&mut array_c);
+    hquicksort_r(&mut array_d);
+
+    println!("Sorted: {:?}", array_a);
+    println!("Sorted: {:?}", array_b);
+    println!("Sorted: {:?}", array_c);
+    println!("Sorted: {:?}", array_d);
+/*
     println!("gcd(1, 25) {} {} {} {}", gcd_r(1, 25), gcd_r(25, 1), gcd_i(1, 25), gcd_i(25, 1));
     println!("gcd(5, 25) {} {} {} {}", gcd_r(5, 25), gcd_r(25, 5), gcd_i(5, 25), gcd_i(25, 5));
     println!("gcd(6, 12) {} {} {} {}", gcd_r(6, 12), gcd_r(12, 6), gcd_i(6, 12), gcd_i(12, 6));
@@ -118,4 +171,5 @@ fn main() {
     println!("gcd(6, 9) {} {} {} {}", gcd_r(6, 9), gcd_r(9, 6), gcd_i(6, 9), gcd_i(9, 6));
     println!("gcd(24, 36) {} {} {} {}", gcd_r(24, 36), gcd_r(36, 24), gcd_i(24, 36), gcd_i(36, 24));
     println!("gcd(0, 36) {} {} {} {}", gcd_r(0, 36), gcd_r(36, 0), gcd_i(0, 36), gcd_i(36, 0));
+*/
 }
