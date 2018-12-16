@@ -36,9 +36,9 @@ pub fn gcd_r(mut a: u32, b: u32) -> u32 {
     }
 }
 
-// Hoare's recursive quicksort (middle element is pivot) `.math.hquicksort.r`
-pub fn hquicksort_r(array: &mut [u32]) {
-    if array.len() < 2 { return; } // 0 or 1.
+// Hoare's Quicksort Recursive (middle element is pivot): HQR `.math.sort.hqr`
+pub fn sort_hqr(array: &mut [u32]) {
+    if array.len() >> 1 == 0 { return; } // 0 or 1.
 
     let mut first = std::usize::MAX;
     let mut last = array.len();
@@ -46,27 +46,27 @@ pub fn hquicksort_r(array: &mut [u32]) {
     let piv = array[mid]; // Pivot.
 
     // Continuously loop (bringing ends closer together).
-    let pivot_index = loop {
-        first = first.wrapping_add(1);
-        while array[first] < piv {
-            first += 1;
+    let pivot_index = 'gpi: loop {
+        'up: loop {
+            first = first.wrapping_add(1);
+            if !(array[first] < piv) { break 'up }
         }
 
-        last -= 1;
-        while array[last] > piv {
-            last -= 1;
+        'dn: loop {
+            last = last.wrapping_sub(1);
+            if !(piv < array[last]) { break 'dn }
         }
 
-        if first >= last {
-            break last;
+        if (first - last) >> 1 == 0 { // first is last or last + 1
+            break 'gpi last;
         }
 
         array.swap(first, last);
     };
 
-    hquicksort_r(&mut array[0..(pivot_index+1)]);
+    sort_hqr(&mut array[0..(pivot_index+1)]);
     let end = array.len();
-    hquicksort_r(&mut array[(pivot_index+1)..end]);
+    sort_hqr(&mut array[(pivot_index+1)..end]);
 }
 
 /// Unsigned 8 Bit Fixed Point (4.4: 0-31)
@@ -146,21 +146,26 @@ fn main() {
     let mut array_b = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
     let mut array_c = [1, 1, 2, 3, 6, 5, 6, 0, 9, 9];
     let mut array_d = [10, 40, 3, 3, 40, 10, 0, 0, 9, 10];
+    let mut array_e = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5];
 
     println!("Unsorted: {:?}", array_a);
     println!("Unsorted: {:?}", array_b);
     println!("Unsorted: {:?}", array_c);
     println!("Unsorted: {:?}", array_d);
+    println!("Unsorted: {:?}", array_e);
 
-    hquicksort_r(&mut array_a);
-    hquicksort_r(&mut array_b);
-    hquicksort_r(&mut array_c);
-    hquicksort_r(&mut array_d);
+    sort_hqr(&mut array_a);
+    sort_hqr(&mut array_b);
+    sort_hqr(&mut array_c);
+    sort_hqr(&mut array_d);
+    sort_hqr(&mut array_e);
 
     println!("Sorted: {:?}", array_a);
     println!("Sorted: {:?}", array_b);
     println!("Sorted: {:?}", array_c);
     println!("Sorted: {:?}", array_d);
+    println!("Sorted: {:?}", array_e);
+
 /*
     println!("gcd(1, 25) {} {} {} {}", gcd_r(1, 25), gcd_r(25, 1), gcd_i(1, 25), gcd_i(25, 1));
     println!("gcd(5, 25) {} {} {} {}", gcd_r(5, 25), gcd_r(25, 5), gcd_i(5, 25), gcd_i(25, 5));

@@ -106,7 +106,7 @@ _ var_b = var_c # else if var_b = var_c
         # Code that runs if var_a equals var_b is false, but var_b equals var_c.  Must be indented 1 tab.
         
 @loop; # loop (Iterator over the unit struct)
-        # Code that runs in an infinite loop.  `loop` is the unit struct.
+        # Code that runs in an infinite loop.  `loop` is a counter starting at zero.
         loop; # continue
         loop;; # break
         
@@ -119,6 +119,9 @@ _ var_b = var_c # else if var_b = var_c
         # Code that runs 5 times.  First time `repeat` equals 0, last time `repeat` equals 4.
         repeat; # continue
         repeat;; # break
+        
+@loop; # loop
+        loop ;; loop = 10 # exit loop at 10.
 ```
 
 ### Index an array/tuple
