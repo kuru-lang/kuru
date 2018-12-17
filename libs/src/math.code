@@ -1,0 +1,19 @@
+# Iterative solution for Greatest Common Divisor.
+# 
+# Usage:
+# ```
+# $a .math.gcd 3, 12
+# .assert a = 3
+# ```
+%gcd $a .Ui4, $b .Ui4; .Ui4
+	a = 0
+		gcd; b
+	b = 0
+		gcd; a
+	~loop;
+		a %: b
+		a = 0
+			gcd; b
+		b %: a
+		b = 0
+			gcd; a

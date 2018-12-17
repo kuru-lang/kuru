@@ -36,6 +36,43 @@ pub fn gcd_r(mut a: u32, b: u32) -> u32 {
     }
 }
 
+/*// Hoare's Quicksort Iterative (middle element is pivot): HQR `.math.sort.hqi`
+pub fn sort_hqi(array: &mut [u32]) {
+    let stack: Vec<(usize, usize)> = vec![];
+
+    loop {
+        if array.len() >> 1 == 0 { return; } // 0 or 1.
+
+        let mut first = std::usize::MAX;
+        let mut last = array.len();
+        let mid = (last - 1) >> 1; // Shift right to divide by two (floor).
+        let piv = array[mid]; // Pivot.
+
+        // Continuously loop (bringing ends closer together).
+        let pivot_index = 'gpi: loop {
+            'up: loop {
+                first = first.wrapping_add(1);
+                if !(array[first] < piv) { break 'up }
+            }
+
+            'dn: loop {
+                last = last.wrapping_sub(1);
+                if !(piv < array[last]) { break 'dn }
+            }
+
+            if (first - last) >> 1 == 0 { // first is last or last + 1
+                break 'gpi last;
+            }
+
+            array.swap(first, last);
+        } + 1;
+
+        sort_hqr(&mut array[0..pivot_index]);
+        let end = array.len();
+        sort_hqr(&mut array[pivot_index..end]);
+    }
+}*/
+
 // Hoare's Quicksort Recursive (middle element is pivot): HQR `.math.sort.hqr`
 pub fn sort_hqr(array: &mut [u32]) {
     if array.len() >> 1 == 0 { return; } // 0 or 1.
@@ -62,11 +99,11 @@ pub fn sort_hqr(array: &mut [u32]) {
         }
 
         array.swap(first, last);
-    };
+    } + 1;
 
-    sort_hqr(&mut array[0..(pivot_index+1)]);
+    sort_hqr(&mut array[0..pivot_index]);
     let end = array.len();
-    sort_hqr(&mut array[(pivot_index+1)..end]);
+    sort_hqr(&mut array[pivot_index..end]);
 }
 
 /// Unsigned 8 Bit Fixed Point (4.4: 0-31)

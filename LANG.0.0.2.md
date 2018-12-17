@@ -2,15 +2,15 @@
 
 ## Declare
 ```
-@CONSTANT: 3 # IMMUTABLE GLOBAL DATA: all functions in module can access.
-$CONSTANT: 3 # MUTABLE GLOBAL DATA: all functions in module can access and modify.
-@var_a: 3 # IMMUTABLE DATA: var_a will always be 3, and can't be changed.
-$var_a: 3 # VARIABLE DATA: var_a will initially be 3, and can be changed later.
+@CONSTANT 3 # IMMUTABLE GLOBAL DATA: all functions in module can access.
+$CONSTANT 3 # MUTABLE GLOBAL DATA: all functions in module can access and modify.
+@var_a 3 # IMMUTABLE DATA: var_a will always be 3, and can't be changed.
+$var_a 3 # VARIABLE DATA: var_a will initially be 3, and can be changed later.
 # Immutable Function
 # parameter 1: var_a is one byte signed integer.
 # parameter 2: var_b is 4 byte unsigned integer, with default value of 12.
-@fnc_a: (var_a: Si1, var_b: Ui4 12)
-        # Code for this Function (must be indented 1 tab).
+@fnc_a @var_a .Si1, @var_b .Ui4 12; .Ui4
+	# Code for this Function (must be indented 1 tab).
 ```
 
 ## Assigns
@@ -45,8 +45,6 @@ var_a ^ 3  # "Exp": Calculate var_a cubed.
 ## Brackets
 ```
 var_a : (1 + 2) * 3   #     Parenthesis (): Do something first before other operations.
-var_a : (var_b: $Si4) #                     or define a function.  Parameters are always immutable.
-    var_b +: 2
 var_a : {1 2 "hi"}    #  Curly Brackets {}: Ordered pair
 var_a : {Ui16 0; 8}   #                     or Array
 var_a : {Ui16 0; 8};  #                     or List (.Lst).
@@ -83,11 +81,11 @@ var_a !       # var_a NEGATE
 ## Option Unwrapping
 ```
 # Returns N, if par_a is N.  Otherwise prints inner value and returns Y.
-@fnc_a: (par_a: .Opt .Ui4) .Opt
+@fnc_a par_a .Opt .Ui4; .Opt
     .print "par_a is ", par_a?, "."
     Y
 # Abort program if par_a is N.  Otherwise prints inner value.
-@fnc_a: (par_a: .Opt .Ui4)
+@fnc_a par_a .Opt .Ui4;
     .print "par_a is ", par_a?, "."
 ```
 
@@ -95,7 +93,7 @@ var_a !       # var_a NEGATE
 ```
 var_a = var_b # if var_a = var_b
         # Code that runs if var_a equals var_b.  Must be indented 1 tab.
-_ var_c # else if var_a = var_c
+= var_c # else if var_a = var_c
         # Code that runs if var_a does not equal var_b, but equals var_c.  Must be indented 1 tab.
 _ # else
         # Code that runs if var_a does not equal var_b or var_c.  Must be indented 1 tab.
@@ -104,24 +102,27 @@ var_a = var_b # if var_a = var_b
         # Code that runs if var_a equals var_b.  Must be indented 1 tab.
 _ var_b = var_c # else if var_b = var_c
         # Code that runs if var_a equals var_b is false, but var_b equals var_c.  Must be indented 1 tab.
-        
-@loop; # loop (Iterator over the unit struct)
-        # Code that runs in an infinite loop.  `loop` is a counter starting at zero.
-        loop; # continue
-        loop;; # break
-        
-@for: [0, 4]; # for (Iterator over a range)
-        # Code that runs 5 times.  First time `for` equals 0, last time `for` equals 4.
-        for; # continue
-        for;; # break
-    
-@repeat: 5; # repeat (Iterator over a counter)
-        # Code that runs 5 times.  First time `repeat` equals 0, last time `repeat` equals 4.
-        repeat; # continue
-        repeat;; # break
-        
-@loop; # loop
-        loop ;; loop = 10 # exit loop at 10.
+
+~loop; # loop (Iterator over the unit struct)
+	# Code that runs in an infinite loop.  `loop` is a counter starting at zero.
+	loop;         # break
+	loop; .Opt.Y  # break loop (loop returns .Opt.Y)
+	loop~         # continue
+
+~for [0, 4]; # for (Iterator over a range)
+	# Code that runs 5 times.  First time `for` equals 0, last time `for` equals 4.
+	for; # break
+	for~ # continue
+
+~repeat 5; # repeat (Iterator over a counter)
+	# Code that runs 5 times.  First time `repeat` equals 0, last time `repeat` equals 4.
+	repeat; # break
+	repeat~ # continue
+
+~5; # nameless repeat
+~; # nameless infinite loop
+~[0, 4]; # nameless for
+~i iter; # for (pass iterator type - implements function `~; .Opt _`, like Rust's `next()`)
 ```
 
 ### Index an array/tuple
@@ -142,11 +143,11 @@ $Type # Type Definition: Reference to Mutable data
 ## Export Labels
 You can export immutable labels (function or constants).
 ```
-@ CONSTANT: 3 # IMMUTABLE GLOBAL DATA: all functions in module can access.
-? CONSTANT: 3 # IMMUTABLE GLOBAL DATA: all functions in code can access.
-? function_a: (var_a: $.Si4)
-    # Function code
-! ffi_import: (var_a: $.Si4) .Si4 # Import C API.
+@CONSTANT 3 # IMMUTABLE GLOBAL DATA: all functions in module can access.
+%CONSTANT 3 # IMMUTABLE GLOBAL DATA: all functions in code can access.
+%function_a var_a $.Si4;
+	# Function code
+!ffi_import: var_a $.Si4; .Si4 # Import C API.
 !"SDL2" # Statically link to C library.
 !!"SDL2" # Dynamically link to C library.
 ```
@@ -163,37 +164,42 @@ multi-line string
 ```
 
 ## Structs
-Structs are defined by at least two characters in CamelCase, followed by an indented list of snake_case fields.
-
+Structs are defined by at least two characters in CamelCase, followed by an indented list of snake_case fields.  Fields in structs can be $(mutable), @(immutable), a reference, or %(public
+immutable).  Structs can only be copied with `::`, otherwise they always use move semantics.
 ```
-StructA T
-        field_a: Si32
-        field_b: T
+@StructA T
+	$field_a Si32
+	$field_b T
 ```
 
 ## Enums
-Structs are defined by at least two characters in CamelCase, followed by an indented list of CamelCase variants.
+Enums are defined by at least two characters in CamelCase, followed by an indented list of CamelCase variants.  When the enum is visible, so are all of the variants.
 
 ```
-EnumA T
-        VariantA: Ui32 1
-        VariantB: Ui32 2, T
-        VariantC # Compiler will give lowest available value (Ui32 0)
-        VariantD: 3 # Type for enum can be infered.  If no type is set it will pick the smallest unsigned type for the number of variants.
+@EnumA T
+	VariantA Ui32 1
+	VariantB Ui32 2, T
+	VariantC # Compiler will give lowest available value (Ui32 0)
+	VariantD 3 # Type for enum can be infered.  If no type is set it will pick the smallest unsigned type for the number of variants.
 ```
 
 ## Implementing Functions On Structs and Enums
 ```
-@TypeA.fnc_a: (var_a: Si1, var_b: Ui4 12)
+@TypeA @var_a .Si4; _
+	# Code for this Constructor
+	TypeA
+		# Fields
+@TypeA.fnc_a @var_a .Si1, @var_b .Ui4 12;
         # Code for this Function (must be indented 1 tab).
 ```
 
 ## Setting Functions to other Functions
 ```
-@fnc_a: (var_a: Si1) Ui4
+@fnc_a @var_a .Si1; .Ui4
         # Code for this Function (must be indented 1 tab).
-$fnc_b: fnc_a # Same as:
-$fnc_b: (var_a: Si1) Ui4 fnc_a
+$fnc_b fnc_a # Same as:
+$fnc_b @var_a .Si1; .Ui4 fnc_a
+fnc_b: fnc_a # Can be assigned like other variables.
 ```
 
 ## Comments
