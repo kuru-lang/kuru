@@ -1,3 +1,5 @@
+@pi 3.14 # TODO
+
 # Iterative solution for Greatest Common Divisor.
 # 
 # Usage:
@@ -5,15 +7,15 @@
 # $a .math.gcd 3, 12
 # .assert a = 3
 # ```
-%gcd $a .Ui4, $b .Ui4; .Ui4
+%gcd .U32; $a .U32, $b .U32
 	a = 0
-		gcd; b
+		gcd b;
 	b = 0
-		gcd; a
-	~loop;
+		gcd a;
+	~
 		a %: b
 		a = 0
-			gcd; b
+			gcd b;
 		b %: a
 		b = 0
-			gcd; a
+			gcd a;
