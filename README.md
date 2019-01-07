@@ -5,7 +5,7 @@ the features of Rust with a Python-like syntax and no keywords.
 Easy, Safe, Fast.
 
 ## Parts:
-* nahar - Nahar build tool.
+* nahar - Nahar shell / build tool.
 * naharc - Nahar Compiler/Decompiler/Transpiler/Assembler CLI (.c/.rs/.py to .nr, .nr to .c/.rs/.na, .na to .nb, .nb to executable)
 * nahara - Nahar assembler (.nr to .nb)
 * naharp - Nahar Package Manager "Harp Software Manager" CLI+GUI{Logo: Grey Harp (on a red stand)}

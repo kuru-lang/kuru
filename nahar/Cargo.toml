@@ -5,3 +5,11 @@ authors = ["Jeron Lau <jeron.lau@plopgrizzly.com>"]
 edition = "2018"
 
 [dependencies]
+termios = "0.3"
+whoami = "0.3"
+
+[profile.release]
+opt-level = 3
+rpath = false
+lto = true
+debug-assertions = false
