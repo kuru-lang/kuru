@@ -10,22 +10,29 @@ impl<'a> Iterator for PartsIter<'a> {
 
         let mut open = false;
         let mut opened = None;
+        let mut iter = self.string.char_indices().peekable();
 
-        for (i, c) in self.string.char_indices() {
-            if c.is_whitespace() && open == false {
-                // Everything up to the whitespace, not including it.
-                let rtn = if let Some(op) = opened {
-                    op
-                } else {
-                    unsafe { self.string.get_unchecked(..i) }
-                };
-                self.string = unsafe { self.string.get_unchecked(i..) };
-                return Some(rtn);
-            } else if c == '"' {
-                if open {
-                    opened = Some(unsafe { self.string.get_unchecked(1..i) });
+        'iter: loop {
+            if let Some((i, c)) = iter.next() {
+                if c.is_whitespace() && open == false {
+                    // Everything up to the whitespace, not including it.
+                    let rtn = if let Some(op) = opened {
+                        op
+                    } else {
+                        unsafe { self.string.get_unchecked(..i) }
+                    };
+                    self.string = unsafe { self.string.get_unchecked(i..) };
+                    return Some(rtn);
+                } else if c == '"' {
+                    if Some('"') != iter.peek().and_then(|f| Some(f.1)) { 
+                        if open {
+                            opened = Some(unsafe { self.string.get_unchecked(1..i) });
+                        }
+                        open = !open;
+                    }
                 }
-                open = !open;
+            } else {
+                break 'iter;
             }
         }
 

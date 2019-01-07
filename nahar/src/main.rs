@@ -8,6 +8,7 @@ use termios::{self, Termios, TCSANOW, tcsetattr};
 
 mod color;
 mod parse;
+mod print;
 
 fn print_header() {
     color::set(true, color::Red, color::Black);
@@ -89,11 +90,12 @@ fn main() -> Result<(), std::io::Error> {
 fn help() {
     println!("Nahar interactive shell.
 
-      cd .directory/               # Change directory.
-      ls .directory/               # List files in directory.
-      \"NOTE text\"                  # Print out string (stdout).  Special codes for graphics.
-      warn \"WARN text\"             # Print out warning (stderr).
-      fail \"FAIL text\"             # Print out error & exit (stderr).
+      cd directory/                # Change directory.
+      ls directory/                # List files in directory.
+      echo \"ECHO text\"             # Print out string.  Special codes for graphics.
+      info \"INFO text\"             # Print out some info.
+      warn \"WARN text\"             # Print out a warning.
+      fail \"FAIL text\"             # Print out an error & exit.
       quit return_var              # Exit on success.
       help                         # Print out this help message.
     ");
@@ -120,6 +122,7 @@ fn main() -> Result<(), std::io::Error> {
     let home = std::env::var("HOME").unwrap();
     let mut path = home.clone();
     let mut folder = folder_from_path(&path);
+    let mut failed = false;
 
     env::set_current_dir(&path).unwrap();
 
@@ -141,16 +144,28 @@ fn main() -> Result<(), std::io::Error> {
             color::set(false, color::Green, color::Black);
             print!(" ");
             let mut open = false;
-            for c in input_vec.iter() {
-                if *c == '"' {
-                    open = !open;
-                    if open {
-                        print!("“");
+            let mut iter = input_vec.iter().peekable();
+            'iter: loop {
+                if let Some(c) = iter.next() {
+                    if *c == '"' {
+                        if iter.peek() == Some(&&'"') {
+                            print!("\"\"");
+                            iter.next().unwrap();
+                        } else {
+                            open = !open;
+                            if open {
+                                color::set(false, color::Cyan, color::Black);
+                                print!("“");
+                            } else {
+                                print!("”");
+                                color::set(false, color::Green, color::Black);
+                            }
+                        }
                     } else {
-                        print!("”");
+                        print!("{}", c);
                     }
                 } else {
-                    print!("{}", c);
+                    break 'iter;
                 }
             }
             color::line();
@@ -251,7 +266,7 @@ fn main() -> Result<(), std::io::Error> {
 
         // must be peekable so we know when we are on the last command
         let mut commands = input.trim().split(" | ").peekable();
-        let mut previous_command = None;
+        let mut previous_command = None; // For piping.
 
         'exec: while let Some(command) = commands.next()  {
             let mut parts = parse::parse(command);
@@ -271,22 +286,41 @@ fn main() -> Result<(), std::io::Error> {
                 "cd" => {
                     let new_dir = args.peekable().peek()
                         .map_or(home.as_str(), |x| *x);
+                    if new_dir.contains("..") {
+                        print::fail(parse::parse("Going up one directory is not allowed."))?;
+                    }
                     let root = Path::new(new_dir);
                     if let Err(e) = env::set_current_dir(&root) {
-                        eprintln!("{}: {:?}", e, root);
+                        print::io_error(e, new_dir).unwrap();
+                    } else {
+                        path = root.to_str().and_then(|f| {Some(f.to_string())}).unwrap();
+                        folder = folder_from_path(&path);
                     }
-                    path = root.to_str().and_then(|f| {Some(f.to_string())}).unwrap();
-                    folder = folder_from_path(&path);
+                    previous_command = None;
+                }
+                "echo" => {
+                    print::echo(args)?;
+                    previous_command = None;
+                }
+                "info" => {
+                    print::info(args)?;
                     previous_command = None;
                 }
                 "warn" => {
-                    eprintln!("");
+                    print::warn(args)?;
+                    previous_command = None;
                 }
                 "fail" => {
-                    eprintln!("");
+                    print::fail(args)?;
+                    previous_command = None;
+                    failed = true;
+                    break 'main;
                 }
                 "quit" => break 'main,
-                "help" => help(),
+                "help" => {
+                    help();
+                    previous_command = None;
+                },
                 command => {
                     let stdin = previous_command
                         .map_or(Stdio::inherit(),
@@ -311,19 +345,7 @@ fn main() -> Result<(), std::io::Error> {
                         Ok(output) => previous_command = Some(output),
                         Err(e) => {
                             previous_command = None;
-                            print!("  ");
-                            color::set(true, color::White, color::Red);
-                            match e.kind() {
-                                std::io::ErrorKind::NotFound => {
-                                    println!("FAIL: Function \"{}\" not found.", command);
-                                }
-                                std::io::ErrorKind::PermissionDenied => {
-                                    println!("FAIL: You don't have permission to run function: {}.", command);
-                                }
-                                error => {
-                                    println!("FAIL: Internal error {:?}: {}.", error, command);
-                                }
-                            }
+                            print::io_error(e, command).unwrap();
                         },
                     };
                 }
@@ -340,6 +362,14 @@ fn main() -> Result<(), std::io::Error> {
     tcsetattr(0, TCSANOW, &termios).unwrap();
     color::reset();
 
+    // Erase background color for next line.
+    color::line();
+    stdout().flush()?;
+
     // Quit
-    Ok(())
+    if failed {
+        ::std::process::exit(255);
+    } else {
+        Ok(())
+    }
 }

@@ -22,7 +22,8 @@ const BG_MAGENTA: &'static str = "\x1B[45m";
 const BG_CYAN: &'static str = "\x1B[46m";
 const BG_WHITE: &'static str = "\x1B[47m";
 
-#[derive(PartialEq)]
+#[allow(unused)]
+#[derive(PartialEq, Copy, Clone)]
 pub enum Color {
     Black,
     Red,

@@ -10,9 +10,10 @@ fg nahar_proc_id             # Move command to foreground.
 let var_name: 0              # Declare a variable.
 let VAR_NAME: 0              # Declare a constant.
 run command                  # Run command in background.  Returns nahar process id.
-"INFO text"                  # Print out string (stdout).  Special codes for graphics.
-warn "WARN text"             # Print out warning (stderr).
-fail "FAIL text"             # Print out error & exit (stderr).
+echo "ECHO text"             # Print out string.  Special codes for graphics.
+info "INFO text"             # Print out string.
+warn "WARN text"             # Print out warning.
+fail "FAIL text"             # Print out error & exit.
 quit $return_var             # Exit on success.
 undo                         # Undo last command in shell (doesn't work for apps on $PATH).
 load lib-name 0.1.0          # Load semver version of a library.
