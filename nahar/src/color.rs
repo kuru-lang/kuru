@@ -3,7 +3,7 @@ use std::io::{stdout, Write};
 const RESET: &'static str = "\x1B[0m";
 
 const BOLD: &'static str = "\x1B[1m";
-const LINE: &'static str = "\x1B[Km";
+const LINE: &'static str = "\x1B[K";
 
 const BLACK: &'static str = "\x1B[30m";
 const RED: &'static str = "\x1B[31m";
@@ -32,6 +32,10 @@ pub enum Color {
     Magenta,
     Cyan,
     White,
+}
+
+pub fn line() {
+    print!("{}", LINE);
 }
 
 pub use self::Color::*;

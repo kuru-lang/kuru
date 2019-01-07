@@ -90,10 +90,12 @@ fn help() {
     println!("Nahar interactive shell.
 
       cd .directory/               # Change directory.
+      ls .directory/               # List files in directory.
       \"NOTE text\"                  # Print out string (stdout).  Special codes for graphics.
       warn \"WARN text\"             # Print out warning (stderr).
       fail \"FAIL text\"             # Print out error & exit (stderr).
       quit return_var              # Exit on success.
+      help                         # Print out this help message.
     ");
 }
 
@@ -110,11 +112,13 @@ fn main() -> Result<(), std::io::Error> {
     let mut input_vec = Vec::new();
     let mut alt = false;
     let mut arrow = false;
+    let mut delete = false;
     let mut cursor = 0;
     let username = whoami::username();
     let user = whoami::user().split_whitespace().next().unwrap_or(&username).to_string();
     let hostname = whoami::hostname();
-    let mut path = std::env::var("HOME").unwrap();
+    let home = std::env::var("HOME").unwrap();
+    let mut path = home.clone();
     let mut folder = folder_from_path(&path);
 
     env::set_current_dir(&path).unwrap();
@@ -128,13 +132,36 @@ fn main() -> Result<(), std::io::Error> {
 
         // Update string.
         input = input_vec.iter().collect();
+        cursor = 0;
 
         'read: loop {
-            print!("\x1B[2K\r"); // Reset line
-            print!("{}({})$ {}", user, folder, input);
+//            print!("\x1B[2K\r"); // Reset line
+            color::set(true, color::Yellow, color::Black);
+            print!("\r{}({})$", user, folder);
+            color::set(false, color::Green, color::Black);
+            print!(" ");
+            let mut open = false;
+            for c in input_vec.iter() {
+                if *c == '"' {
+                    open = !open;
+                    if open {
+                        print!("“");
+                    } else {
+                        print!("”");
+                    }
+                } else {
+                    print!("{}", c);
+                }
+            }
+            color::line();
+            for _ in 0..(input.len() - cursor) {
+                print!("\x1b\x5b\x44");
+            }
+            color::set(false, color::White, color::Black);
             stdout().flush()?;
             let mut buffer = [0; 1];
             reader.read_exact(&mut buffer).unwrap();
+//            println!("{:x}", buffer[0]);
             alt = match buffer[0] {
                 b'\x0d' => break 'read,
                 // Control Operations (a-z)
@@ -170,27 +197,45 @@ fn main() -> Result<(), std::io::Error> {
                     }
                     false
                 }, // 
-                b'\x7e' => { // delete
-                    input_vec.pop();
+                b'\x7e' => { // delete & ~
+                    if delete {
+                        if cursor < input_vec.len() {
+                            cursor += 1;
+                        }
+                        if cursor > 0 {
+                            cursor -= 1;
+                            input_vec.remove(cursor);
+                        }
+                    } else {
+                        input_vec.insert(cursor, '~');
+                        cursor += 1;
+                    }
                     false
                 },
                 b'\x7f' => {
-                    input_vec.pop();
+                    if cursor > 0 {
+                        cursor -= 1;
+                        input_vec.remove(cursor);
+                    }
                     false
                 }, // backspace
 //                
                 character => {
                     if arrow {
                         match character {
+                            b'\x33' => { delete = true }
                             b'\x41' => { println!("TODO: Up") }, // Up
                             b'\x42' => { println!("TODO: Down") }, // Down
-                            b'\x43' => { println!("TODO: Right") }, // Right
-                            b'\x44' => { println!("TODO: Left") }, // Left
+                            b'\x43' => { if cursor < input_vec.len() {
+                                cursor += 1;
+                            } }, // Right
+                            b'\x44' => { if cursor > 0 { cursor -= 1; } }, // Left
                             _ => { println!("Unknown key sequence") }, // Unknown
                         }
                         arrow = false;
                     } else {
-                        input_vec.push(character as char);
+                        input_vec.insert(cursor, character as char);
+                        cursor += 1;
                     }
                     false
                 },
@@ -208,15 +253,24 @@ fn main() -> Result<(), std::io::Error> {
         let mut commands = input.trim().split(" | ").peekable();
         let mut previous_command = None;
 
-        while let Some(command) = commands.next()  {
+        'exec: while let Some(command) = commands.next()  {
             let mut parts = parse::parse(command);
-            let command = parts.next().unwrap();
+            let command = if let Some(a) = parts.next() {
+                a
+            } else {
+                break 'exec;
+            };
             let args = parts;
+            let exts = if command == "ls" {
+                ["--color=auto", "-A", "--group-directories-first", "-N"].iter()
+            } else {
+                [].iter()
+            };
 
             match command {
                 "cd" => {
                     let new_dir = args.peekable().peek()
-                        .map_or("/", |x| *x);
+                        .map_or(home.as_str(), |x| *x);
                     let root = Path::new(new_dir);
                     if let Err(e) = env::set_current_dir(&root) {
                         eprintln!("{}: {:?}", e, root);
@@ -224,7 +278,7 @@ fn main() -> Result<(), std::io::Error> {
                     path = root.to_str().and_then(|f| {Some(f.to_string())}).unwrap();
                     folder = folder_from_path(&path);
                     previous_command = None;
-                },
+                }
                 "warn" => {
                     eprintln!("");
                 }
@@ -247,6 +301,7 @@ fn main() -> Result<(), std::io::Error> {
                     };
 
                     let output = Command::new(command)
+                        .args(exts)
                         .args(args)
                         .stdin(stdin)
                         .stdout(stdout)
@@ -256,7 +311,19 @@ fn main() -> Result<(), std::io::Error> {
                         Ok(output) => previous_command = Some(output),
                         Err(e) => {
                             previous_command = None;
-                            eprintln!("{}", e);
+                            print!("  ");
+                            color::set(true, color::White, color::Red);
+                            match e.kind() {
+                                std::io::ErrorKind::NotFound => {
+                                    println!("FAIL: Function \"{}\" not found.", command);
+                                }
+                                std::io::ErrorKind::PermissionDenied => {
+                                    println!("FAIL: You don't have permission to run function: {}.", command);
+                                }
+                                error => {
+                                    println!("FAIL: Internal error {:?}: {}.", error, command);
+                                }
+                            }
                         },
                     };
                 }
