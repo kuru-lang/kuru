@@ -6,20 +6,20 @@ they can be labeled.
 Stuff is compiled from `code` to `exec`.
 ```
 'my_project/'
-├── 'code/'                # This is where all of the source *code* files are kept.
-│   ├── 'my_project.code'  # The code file that shares the name of the project is entry point.
-│   ├── 'my_module.code'   # Define a new module by creating a new_file.
-│   └── 'MyStruct.code'    # Define a new data structure by creating a NewFile.
-├── 'data/'                # This is where all of the data files / resources are kept.
-│   └── 'DATA_FILE.png'    # Define a new immutable data literal struct by creating a NEW_FOLDER.
-├── 'exec/'                # This is where all of the *exec*utable files are kept for distribution.
-│   ├── 'my_project.exec'  # The portable executable file that shares the name of the project.
-│   ├── 'my_project.apk'   # The Android application package that shares the name of the project.
-│   ├── 'my_project.dmg'   # The Mac OS application package that shares the name of the project.
-│   ├── 'my_project.exe'   # The Windows installer file that shares the name of the project.
-│   └── 'my_project/'      # Linux flatpak repository that can later be published on flathub.
-├── '.gitignore'           # Git Stuff: ignore exec/
-└── '.git/'                # Git Stuff
+├── 'src/'                  # This is where all of the source *code* files are kept.
+│   ├── 'my_project'        # The code file that shares the name of the project is entry point.
+│   ├── 'my_module'         # Define a new module by creating a new_file.
+│   └── 'MyStruct'          # Define a new data structure by creating a NewFile.
+├── 'res/'                  # This is where all of the data files / resources are kept.
+│   └── 'RES_FILE.png'      # Define a new immutable data literal struct by creating a NEW_FOLDER.
+├── 'app/'                  # This is where all of the *exec*utable files are kept for distribution.
+│   ├── 'my_project.app'    # The portable executable file that shares the name of the project.
+│   ├── 'my_project.apk'    # The Android application package that shares the name of the project.
+│   ├── 'my_project.dmg'    # The Mac OS application package that shares the name of the project.
+│   ├── 'my_project.exe'    # The Windows installer file that shares the name of the project.
+│   └── 'my_project/'       # Linux flatpak repository that can later be published on flathub.
+├── '.gitignore'            # Git Stuff: ignore exec/
+└── '.git/'                 # Git Stuff
 ```
 
 # Reference
@@ -241,7 +241,7 @@ $       Variable
 @       Local Function / Iterator (Label)
 ._      Type
 "       String
-'       Character
+'       Character or Path
 0-9     Number
     0b  Number.Binary
     0x  Number.Hexadecimal
