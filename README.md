@@ -1,16 +1,18 @@
 # Nahar
-A simple programming language inspired by Rust and Python.  The goal is to have
-the features of Rust with a Python-like syntax and no keywords.
+A simple programming language inspired by Rust and Python.
 
-Easy, Safe, Fast.
+## Goals
+* Rust-Like Safety - Programs never will have segmentation fault, and can multi-process.
+* No Keywords - Variable and function names should be unrestricted.
+* Fast - Should not be slower than C.
+* Easy To Learn - Small number of rules for syntax.
+* Simple Compile - Compile times should be very small because of simple compilation rules.
+* Usable as a shell similar to BASH - Similar syntax / functionality for scripting.
 
 ## Parts:
-* nahar - Nahar shell / build tool.
-* naharc - Nahar Compiler/Decompiler/Transpiler/Assembler CLI (.c/.rs/.py to .nr, .nr to .c/.rs/.na, .na to .nb, .nb to executable)
-* nahara - Nahar assembler (.nr to .nb)
-* naharp - Nahar Package Manager "Harp Software Manager" CLI+GUI{Logo: Grey Harp (on a red stand)}
-* naharg - "Nahar IDE" GUI{Logo: White Horse (in green field)} (Supports Nahar, Rust, C, Python)
-* nahare - Nahar Desktop Environment "NaHare" GUI{Logo: Black Rabbit (in a blue river)}
+* nahar - Nahar shell / build tool (input: *.code, output: *.exec, binary executable).  Also convert .c/.rs/.py to .code with --transpile flag.  GUI{Logo: White Horse (in green field)} (Supports Nahar, Rust, C, Python)
+* harp - Nahar Package Manager "Harp Software Manager" CLI+GUI{Logo: Grey Harp (on a red stand)}
+* dive - Nahar Environment "Dive OS" GUI{Logo: Gobi (Brown) Bear (diving into a blue river)}
 
 ## Compiling Chain
 ```bash

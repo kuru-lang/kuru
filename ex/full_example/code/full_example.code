@@ -1,0 +1,46 @@
+## This example demonstrates a lot of the language's syntax.
+
+# Version header: use language and standard library version 0.0.4.
+!0.0.4
+
+# Entry Point For Program, print to the screen.  Static strings are declared with `""`.
+# Environment variables are defined with $(NAME) rather than normal variables with $NAME
+~info "Hello, world‽  Path is " $PATH
+
+# Declare variables with `Type` + `$var_name` (+ `:` + value).
+.d4	$decimal_pi Pi    # 3.14… (~Pi not needed because Pi is variant on .d4)
+_   	$Return             # infer type, immutable, not set
+.s4 .s4 $x $y       -1 3  # split list into x and y.
+
+# Double var and add 1
+$decimal_pi : 2 * $decimal_pi + 1
+# Add 1 again
+$decimal_pi +: 1
+
+# Call a function defined in this module and get it's return value.
+$Return: @hello $decimal_pi
+
+# Define a function.  Functions are variables with inputs.
+.u4 @hello
+# Parameter list, one per line or comma separated (can start on previous line).  One
+# parameter.
+.d4 $decimal_pi
+	# Define a list
+	.u4 $list: 0 1 2 3 4 5 6 7 8 9 10
+	# Print to screen.
+	~info "Hello, world!"
+	# Iterator "@MY_ITER" that returns . (unit struct / "void") and iterates over $list.
+	# is shorthand for `. @MY_ITER $list`
+	@MY_ITER $list
+		~info $my_iter
+		# if MY_ITER = 9, an unnamed iterator on a boolean, can be on one line.
+		# Shorthand for `. @ @MY_ITER = 9`
+		@MY_ITER
+		= 9
+			# Escape (break) $my_iter
+			`MY_ITER
+		# if MY_ITER = 8
+		= 8
+			~warn "Iterator is 8"
+	# Return 4.  Expression; means escape (return).
+	`hello 4

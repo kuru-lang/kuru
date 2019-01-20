@@ -14,7 +14,7 @@ echo "ECHO text"             # Print out string.  Special codes for graphics.
 info "INFO text"             # Print out string.
 warn "WARN text"             # Print out warning.
 fail "FAIL text"             # Print out error & exit.
-quit $return_var             # Exit on success.
+exit $return_var             # Quit on success.
 undo                         # Undo last command in shell (doesn't work for apps on $PATH).
 load lib-name 0.1.0          # Load semver version of a library.
 module.function arg_1 arg_2  # Call a function in a module.
