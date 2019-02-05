@@ -1,7 +1,5 @@
-## This example demonstrates a lot of the language's syntax.
-
-# Version header: use language and standard library version 0.0.4.
-!0.0.4
+#!nahar 0.0.5 # version header: use language and standard library version 0.0.5
+# This example demonstrates a lot of the language's syntax.
 
 # Entry Point For Program, print to the screen.  Static strings are declared with `""`.
 # Environment variables are defined with $(NAME) rather than normal variables with $NAME
