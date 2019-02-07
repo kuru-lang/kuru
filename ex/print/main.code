@@ -1,2 +1,4 @@
+#!nahar 0.0.6
+
 # Print out to the command line
-~info "Həllø, Wôrld‽"
+info "Həllø, Wôrld‽"

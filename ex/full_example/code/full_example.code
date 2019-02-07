@@ -1,25 +1,25 @@
-#!nahar 0.0.5 # version header: use language and standard library version 0.0.5
+#!nahar 0.0.6 # version header: use language and standard library version 0.0.6
 # This example demonstrates a lot of the language's syntax.
 
 # Entry Point For Program, print to the screen.  Static strings are declared with `""`.
-# Environment variables are defined with $(NAME) rather than normal variables with $NAME
-~info "Hello, world‽  Path is " $PATH
+# Environment variables are defined with $NAME.
+info "Hello, world‽  Path is " $PATH
 
 # Declare variables with `Type` + `$var_name` (+ `:` + value).
-.d4	$decimal_pi Pi    # 3.14… (~Pi not needed because Pi is variant on .d4)
-_   	$Return             # infer type, immutable, not set
-.s4 .s4 $x $y       -1 3  # split list into x and y.
+Sfix32        decimal_pi: PI    # 3.14… (~Pi not needed because Pi is variant on .d4)
+_             RETURN            # infer type, immutable, not set
+Sint32 Sint32 x y:        -1 3  # split list into x and y.
 
 # Double var and add 1
-$decimal_pi : 2 * $decimal_pi + 1
+decimal_pi : 2 * decimal_pi + 1
 # Add 1 again
-$decimal_pi +: 1
+decimal_pi +: 1
 
 # Call a function defined in this module and get it's return value.
-$Return: @hello $decimal_pi
+RETURN: hello decimal_pi
 
 # Define a function.  Functions are variables with inputs.
-.u4 @hello
+[hello Uint32]
 # Parameter list, one per line or comma separated (can start on previous line).  One
 # parameter.
 .d4 $decimal_pi

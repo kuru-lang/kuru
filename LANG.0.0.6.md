@@ -1,32 +1,61 @@
 # Nahar 0.0.6
-Must have this header:
 
+## Parser
 ```
+# Must have this header                                 (Begins with #!)
 #!nahar 0.0.6
-```
 
-# Domains
-```
-"command" "--flag" "argument" var $VAR      # use shell to call a program from $PATH
-[Uint32 function] Uint32 arg_a Sint32 arg_b # define a function (returns Uint32)
-function arg_a arg_b                        # call a function
-Vec4                                        # define a struct
-    Uint32 mutable_field
+# This is a comment                                     (Begins with #)
+
+# Evaluate expression
+## Evaluate and print result.                           (Begins with expression - Number)
+1 + (2 * 3)
+## Print out text                                       (Begins with expression - String)
+"Text to print."
+## Iterator (if) statement                              (Begins with expression - snake_case)
+boolean_variable | (expression)
+## Type constructor                                     (Begins with expression - CamelCase)
+Vec4 1 0 0 col4
+
+# Set a variable (Run set function on it)               (Begins with snake_case:)
+variable_name: 30
+# Run a function on variable                            (Begins with snake_case.)
+variable_name.function "param"
+# Execute a variable as function (evaluate)             (Begins with snake_case)
+variable_name param
+# Execute a function / variable.                        (Begins with snake_case)
+function_name param_var PARAM_CONST (1 + 1) "--flag" "argument" var $VAR
+# Execute an environment variable                       (Begins with $)
+$ENV_VAR "param" param_var
+
+# Define a Struct or Trait (see Rust language)          (Begins with CamelCase)
+Vec4
+    Mut-Uint32 mutable_field
+    Uint32 immutable_field
     Uint32 CONSTANT_FIELD
-    [Vec4] Uint32*4 components              # define a constructor.
-    [Text]                                  # define a converter.
-    [function] Uint32 arg_a                 # define a function on the type
-Enum                                        # define a enum
-    VARIANT_A: 0
-    VARIANT_B Uint32: 1                     # variant with data
+    # Ignore above for a trait.
+    Fn Vec4; Uint32*4 components # define a constructor.
+    Fn Text;                     # define a converter.
+    Fn function; Uint32 arg_a    # define a function on the type
+
+# Define an alias.                                      (Begins with CamelCase CamelCase)
+# Enum is an alias for Uint32 (must still be cast - is "type safe" alias)
+Enum Uint16
+    VARIANT_A 0
+    VARIANT_B 1 Uint16 var                   # variant with data
     VARIANT_C
-    VARIANT_D Uint32
-    [Enum] Uint32 param                     # (same as struct) define a constructor
-    [Uint32 function] Uint32 arg_a          # (same as struct) define a function on the type
-Int: Sint32                                  # alias a type
-Trait:                                      # a trait (see Rust language).
-    [Char implement_this] Uint32 param      # function definition.
-Vec4 1 0 0 0                                # call a constructor
+    VARIANT_D Uint16 var
+    Fn Enum; Uint32 param                    # (same as struct) define a constructor
+    Fn function Uint32 rtn; Uint32 arg_a     # (same as struct) define a function on the type
+
+# Define a variable (must be set on same line defined)
+Uint32 variable: 0
+Mut-Uint32 variable: 0
+# Define a function (returns Uint32)
+Fn function Uint32 rtn_var; Uint32 arg_a Sint32 arg_b
+
+
+
 #!math                                      # import all from "math.zip" library.
 #!math.PI                                   # import PI from "math.zip" library.
 #!math.sin cos PI                           # import multiple items from a library.
@@ -56,27 +85,30 @@ unreachable.  Code will also be checked at compile time for infinite loops - no 
 an infinite loop.  In order to get a loop like a game loop you must use the `looper` function.
 FFI is not included in the language on purpose because FFI is unsafe.  The standard library takes
 care of interfacing to the system (which is done purely through stdout escape sequences that the
-nahar engine interprets).
+nahar engine interprets).  First function is entry point (the "main" function).
 
 ```
 #!nahar 0.0.6
 
-# Entry Point for Program (variables defined here are usable only in other functions in this file)
-Uint32 i: 0
-info "Hello, World!"
-looper loop
+AppState
+    Uint32 i: 0
 
-[loop]
-Uint32 ONE: 1
-info i ": " (another_function) ", " ONE
-i = 4
-    looper stop
-i +: 1
+# Entry Point for Program.
+app_start
+    info "Hello, World!"
+    looper loop AppState
 
-[stop]
-another_function
-info "Can't go on " _ "...." # Use `_` for last returned value.
-exit
+loop AppState state
+    Uint32 ONE: 1
+    info i ": " (another_function) ", " ONE
+    i = 4
+        looper stop
+    i +: 1
+
+stop;
+    another_function
+    info "Can't go on " _ "...." # Use `_` for last returned value.
+    exit
 
 # Create Function Entry Point
 [function]
@@ -85,7 +117,7 @@ Uint32 a: 2
 4
     a +: 1
 
-[Uint32 another_function]
+[another_function Uint32]
 function
 ```
 
@@ -108,6 +140,10 @@ If statements are actually just iterators over boolean values.
 
 # Types
 ```
+Fn-     # Function
+Mut-    # Private Getter and Setter (default is private getter, no setter).
+Get-    # Public Getter.  Private setter.
+Set-    # Public Getter and Setter.
 Opt-    # 1 Bit Y or N, Y can wrap a type.
 List-   # Dynamically growable array.
 Ref-    # Reference to type.
@@ -159,7 +195,10 @@ Data    # A string of bytes.
 [looper] [loop]         # Set the loop.  Initially, the next loop is set to `exit`.
 [exit]                  # Quit the program.
 [save] _ file           # Save a file's program state (can be any type).
-[_ load]                # Load a file's program state (can be any type).
+[load _ file]           # Load a file's program state (can be any type).
+
+# Constants
+PI
 ```
 
 # Syntax
@@ -167,4 +206,18 @@ Data    # A string of bytes.
 {Sint32 iter}           # Slice iterator `iter` over `Sint32`
 2 * (1 + 2)             # Parenthesis - like math
 [Sint32 fn] Char c      # Function definition
+```
+
+# Parser
+```
+Alias Type                              # Define an alias type.
+TypeCamelCase                           # Define a type.
+    EnumVariantCamelCase                # Type is a tagged union.
+    mutable_field Type default_value    # Type is a struct
+    CONSTANT_FIELD                      #       .….
+function_snake_case                     # Call a function
+variable_snake Type Value               # Declare a variable
+VARIABLE_SNAKE Type Value               # Declare a constant
+variable_snake Value                    # Set a variable (Call variable as function to set it).
+[function Rtn] param Type               # Declare a function
 ```
