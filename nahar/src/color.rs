@@ -1,3 +1,12 @@
+//! # Color Documentation (Syntax Highlighting Rules)
+//! * Red               Bold: Error,
+//! * Green: Code,      Bold,
+//! * Yellow,           Bold: Prompt,
+//! * Blue: Warn,       Bold: Warn,
+//! * Magenta: Comment, Bold,
+//! * Cyan: Strings,    Bold,
+//! * White: Stdout,    Bold,
+
 use std::io::{stdout, Write};
 
 const RESET: &'static str = "\x1B[0m";

@@ -209,6 +209,9 @@ fn main() -> Result<(), std::io::Error> {
                 b'\x5b' => {
                     if alt {
                         arrow = true;
+                    } else {
+                        input_vec.insert(cursor, '[');
+                        cursor += 1;
                     }
                     false
                 }, // 

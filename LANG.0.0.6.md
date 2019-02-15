@@ -12,8 +12,8 @@
 1 + (2 * 3)
 ## Print out text                                       (Begins with expression - String)
 "Text to print."
-## Iterator (if) statement                              (Begins with expression - snake_case)
-boolean_variable | (expression)
+## Iterator (if) statement                              (Begins with expression - snake_case;)
+boolean_variable | (expression);
 ## Type constructor                                     (Begins with expression - CamelCase)
 Vec4 1 0 0 col4
 
@@ -34,9 +34,9 @@ Vec4
     Uint32 immutable_field
     Uint32 CONSTANT_FIELD
     # Ignore above for a trait.
-    Fn Vec4; Uint32*4 components # define a constructor.
-    Fn Text;                     # define a converter.
-    Fn function; Uint32 arg_a    # define a function on the type
+    Fn Uint32*4 components: Vec4  # define a constructor.
+    Fn: Text                      # define a converter.
+    Fn function Uint32 arg_a:     # define a function on the type
 
 # Define an alias.                                      (Begins with CamelCase CamelCase)
 # Enum is an alias for Uint32 (must still be cast - is "type safe" alias)
@@ -45,24 +45,22 @@ Enum Uint16
     VARIANT_B 1 Uint16 var                   # variant with data
     VARIANT_C
     VARIANT_D Uint16 var
-    Fn Enum; Uint32 param                    # (same as struct) define a constructor
-    Fn function Uint32 rtn; Uint32 arg_a     # (same as struct) define a function on the type
+    Fn Uint32 param: Enum                    # (same as struct) define a constructor
+    Fn function Uint32 arg_a: Uint32 rtn     # (same as struct) define a function on the type
 
-# Define a variable (must be set on same line defined)
-Uint32 variable: 0
-Mut-Uint32 variable: 0
-# Define a function (returns Uint32)
-Fn function Uint32 rtn_var; Uint32 arg_a Sint32 arg_b
+# Define a variable (must be set on same line defined)                      (CamelCase snake_case:)
+Uint32 variable: 0                          # private immutable variable
+Mut-Uint32 variable: 0                      # private mutable variable
+Vec4 var_a: 1 0 0 0                         # call multi-parameter constructor
+# Define a function (returns Uint32)                                        (CamelCase snake_case:)
+Fn function Uint32 arg_a Sint32 arg_b: Uint32 rtn_var
+# Load code (Macro LOAD generates module).
+LOAD math                                   # library as module 'math' from nahar standard.
+LOAD "math.zip"                             # library as module 'math' from file "math.zip".
+LOAD math PI                                # import PI from 'math' library.
+LOAD mat: math                              # import 'math' library as module 'mat'
 
 
-
-#!math                                      # import all from "math.zip" library.
-#!math.PI                                   # import PI from "math.zip" library.
-#!math.sin cos PI                           # import multiple items from a library.
-Vec4 var_a: 1 0 0 0                         # define a local mutable variable
-var_a: 1 0 0 0                              # set a local mutable variable
-Vec4 VAR_A: 1 0 0 0                         # define an immutable variable (local or global).
-$ENVIRONMENT_VARIABLE                       # environment variable
 var_a = 1 0 0 0                             # if statement: if var_a equals ...
 = 1 _ _ _                                   # case (if else) statement
 =                                           # else statement
