@@ -87,18 +87,25 @@ fn main() -> Result<(), std::io::Error> {
     Ok(())
 }*/
 
-fn help() {
-    println!("Nahar interactive shell.
+fn help_with_comment(text: &str, comment: &str) {
+    color::set(false, color::White, color::Black);
+    print!("{}", text);
+    color::set(false, color::Magenta, color::Black);
+    println!("{}", comment);
+}
 
-      cd directory/                # Change directory.
-      ls directory/                # List files in directory.
-      echo \"ECHO text\"             # Print out string.  Special codes for graphics.
-      info \"INFO text\"             # Print out some info.
-      warn \"WARN text\"             # Print out a warning.
-      fail \"FAIL text\"             # Print out an error & exit.
-      quit return_var              # Exit on success.
-      help                         # Print out this help message.
-    ");
+fn help() {
+    help_with_comment("Nahar interactive shell.
+
+      cd directory/                ", "# Change directory.");
+    help_with_comment("      ls directory/                ", "# List files in directory.");
+    help_with_comment("      run                          ", "# Make sure running program from $PATH.");
+    help_with_comment("      echo \"ECHO text\"             ", "# Print out string.  Special codes for graphics.");
+    help_with_comment("      info \"INFO text\"             ", "# Print out some info.");
+    help_with_comment("      warn \"WARN text\"             ", "# Print out a warning.");
+    help_with_comment("      fail \"FAIL text\"             ", "# Print out an error & exit.");
+    help_with_comment("      quit return_var              ", "# Exit on success.");
+    help_with_comment("      help                         ", "# Print out this help message.");
 }
 
 fn folder_from_path(path: &String) -> String {
@@ -123,6 +130,7 @@ fn main() -> Result<(), std::io::Error> {
     let mut path = home.clone();
     let mut folder = folder_from_path(&path);
     let mut failed = false;
+    let mut color_change = false;
 
     env::set_current_dir(&path).unwrap();
 
@@ -145,24 +153,43 @@ fn main() -> Result<(), std::io::Error> {
             print!(" ");
             let mut open = false;
             let mut iter = input_vec.iter().peekable();
+            color_change = true;
             'iter: loop {
                 if let Some(c) = iter.next() {
-                    if *c == '"' {
-                        if iter.peek() == Some(&&'"') {
-                            print!("\"\"");
-                            iter.next().unwrap();
-                        } else {
-                            open = !open;
-                            if open {
-                                color::set(false, color::Cyan, color::Black);
-                                print!("“");
+                    match *c {
+                        '"' => {
+                            if iter.peek() == Some(&&'"') {
+                                print!("\"\"");
+                                iter.next().unwrap();
                             } else {
-                                print!("”");
-                                color::set(false, color::Green, color::Black);
+                                open = !open;
+                                if open {
+                                    color::set(false, color::Cyan, color::Black);
+                                    print!("“");
+                                } else {
+                                    print!("”");
+                                    color::set(false, color::Green, color::Black);
+                                }
                             }
                         }
-                    } else {
-                        print!("{}", c);
+                        a => {
+                            match a {
+                                '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
+                                    if color_change {
+                                        color::set(false, color::Blue, color::Black);
+                                        color_change = false;
+                                    }
+                                }
+                                ' ' => {
+                                    color::set(false, color::Green, color::Black);
+                                    color_change = true;
+                                }
+                                _ => {
+                                    color_change = false;
+                                }
+                            }
+                            print!("{}", c);
+                        }
                     }
                 } else {
                     break 'iter;

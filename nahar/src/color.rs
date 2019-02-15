@@ -1,11 +1,11 @@
 //! # Color Documentation (Syntax Highlighting Rules)
-//! * Red               Bold: Error,
-//! * Green: Code,      Bold,
-//! * Yellow,           Bold: Prompt,
+//! * Red: Function DNE Bold: Type DNE & Error,
+//! * Green: Code,      Bold: Function Exists,
+//! * Yellow: Number,   Bold: Prompt,
 //! * Blue: Warn,       Bold: Warn,
-//! * Magenta: Comment, Bold,
-//! * Cyan: Strings,    Bold,
-//! * White: Stdout,    Bold,
+//! * Magenta: Comment, Bold: () / Syntax Stuff,
+//! * Cyan: Strings,    Bold: Environment Variable,
+//! * White: Stdout,    Bold: Type Exists,
 
 use std::io::{stdout, Write};
 
