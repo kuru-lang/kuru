@@ -6,7 +6,7 @@ macro_rules! matrix {
     }
 }
 
-/// A dynamically-sized matrix.
+/*/// A dynamically-sized matrix.
 /// ```nahar
 /// # A dynamically-sized matrix
 /// Matrix
@@ -26,7 +26,7 @@ pub struct Matrix<T, U>
     entries: Vec<T>,
     dimensions: Vec<u8>,
 
-    entries: Vec<Vec<T>>,
+    entries2: Vec<Vec<T>>,
     __: std::marker::PhantomData<U>,
 }
 
@@ -50,4 +50,4 @@ impl<T, U> Matrix<T, U>
             __: std::marker::PhantomData,
         }
     }
-}
+}*/
