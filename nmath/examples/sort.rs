@@ -3,6 +3,33 @@ const ARRAY_B: [u32; 15] = [2, 1, 15, 4, 3, 5, 6, 13, 14, 7, 8, 10, 9, 11, 12];
 const ARRAY_C: [u32; 15] = [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
 const ARRAY_D: [u32; 15] = [1, 2, 1, 3, 2, 4, 3, 5, 4, 4, 5, 6, 6, 1, 0];
 
+fn bubble_sort(array: &mut [u32]) {
+    loop {
+        let mut same = true;
+        for j in 1..array.len() {
+            if array[j - 1] > array[j] {
+                array.swap(j - 1, j);
+                same = false;
+            }
+        }
+        if same {
+            break;
+        }
+    }
+}
+
+fn selection_sort(array: &mut [u32]) {
+    for j in 0..array.len() {
+        let mut least = j;
+        for i in j+1..array.len() {
+            if array[i] < array[least] {
+                least = i;
+            }
+        }
+        array.swap(j, least);
+    }
+}
+
 fn insertion_sort(array: &mut [u32]) {
     for j in 1..array.len() {
         let key = array[j];
@@ -248,6 +275,30 @@ fn main() {
     radix_sort(&mut array_b);
     radix_sort(&mut array_c);
     radix_sort(&mut array_d);
+    println!("{:?}\n{:?}\n{:?}\n{:?}", array_a, array_b, array_c, array_d);
+    check(array_a, array_b, array_c, array_d);
+
+    // Check selection sort.
+    let mut array_a = ARRAY_A;
+    let mut array_b = ARRAY_B;
+    let mut array_c = ARRAY_C;
+    let mut array_d = ARRAY_D;
+    selection_sort(&mut array_a);
+    selection_sort(&mut array_b);
+    selection_sort(&mut array_c);
+    selection_sort(&mut array_d);
+    println!("{:?}\n{:?}\n{:?}\n{:?}", array_a, array_b, array_c, array_d);
+    check(array_a, array_b, array_c, array_d);
+
+    // Check bubble sort.
+    let mut array_a = ARRAY_A;
+    let mut array_b = ARRAY_B;
+    let mut array_c = ARRAY_C;
+    let mut array_d = ARRAY_D;
+    bubble_sort(&mut array_a);
+    bubble_sort(&mut array_b);
+    bubble_sort(&mut array_c);
+    bubble_sort(&mut array_d);
     println!("{:?}\n{:?}\n{:?}\n{:?}", array_a, array_b, array_c, array_d);
     check(array_a, array_b, array_c, array_d);
 }
