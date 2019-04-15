@@ -25,7 +25,7 @@ The order of operations (all else is sequential):
 
 ### Ascii
 ```
-!   // assert !.opt.y = n
+!   // assert !?.y = n
 %   // "4 mod 3 = " + {4 % 3}
 ^   // "4 xor 3 = " + {4 ^ 3}
 &   // "4 and 3 = " + {4 & 3}
@@ -51,16 +51,17 @@ $   // pseudo-regisister (hex) `$2A0` or self pseudo-register `$self`
 ()  // tuple
 []  // array
 {}  // scope
-~   // Exclusive range 0~10
-:   // Inclusive range 0:9, Assignment
-;   // Separate functions.  Terminate expression.
-,   // Repeat syntax.
-"   // Single line string
-'   // Character.
-''  // Multi-line string (more ' too).
-.   // Path separator.
-?   // Option
-_   // Infer: force the compiler to guess.
+~   // exclusive range 0~10
+:   // inclusive range 0:9, assignment
+::  // define a type.
+;   // separate functions.  terminate expression.
+,   // repeat syntax.
+"   // single line string
+'   // character.
+''  // multi-line string (more ' too).
+.   // path separator.
+?   // option
+_   // infer: force the compiler to guess.
 
 ```
 
@@ -69,7 +70,7 @@ _   // Infer: force the compiler to guess.
 function        // snake_case for functions, types and variable names.
 @type           // @snake_case for references.
 _unused         // _snake_case for unused functions and variable names.
-`label          // #snake_case for labels.
+`label          // `snake_case for labels.
 
 [u32, 128]      // Fixed size array.
 [1 2 3]         // [] for lists `var list: [3 * .i32](1 2 3)`.
@@ -88,9 +89,11 @@ These actually generate the assembly code.  They cannot be created, so these are
 Future versions of the language may add these, or remove them.
 
 ```
-type        // Define a Type.
-let         // Declare an immutable data type.
-var         // Declare a mutable data type.
+let         // declare an immutable data type.
+var         // declare a mutable data type.
+def         // define a type.
+fnc         // define a function.
+ffi         // define a c function.
 ```
 
 ## Built-In Types
@@ -140,15 +143,15 @@ int function(int* rtn_b, int* rtn_c, const int* input_a, int intput_b);
 
 ```nr
 // ffi binding for the c prototype (l_operand mutable is always first, r_operand immutable last).
-s32 (rtn_a @s32, rtn_b @s32).function(input_a @s32, input_b s32);
+ffi (rtn_a:@s32 rtn_b:@s32).function(input_a:@s32 input_b:s32): s32
 ```
 
 ## Standard Library
 ```
-type opt(t).(
+def ?<t> [
     y(t)
     n
-)
+]
 ```
 
 ## Assembly
@@ -156,9 +159,9 @@ type opt(t).(
 
 ```
 // Tagged union of assembly instructions.
-type .asm
+def asm<
     x: .int 0~
-[
+> [
     // Add each component of two vectors together (`dst0: src0 + src1`).
     add "$" dst0 "$" src0 "$" src1
     // Add all components of vector together (`dst0: src0 + src1`)
@@ -200,15 +203,15 @@ add 2 3                             // print return value of add.
 text my_function() {                // function that returns text.
     "Hello, world!"                 // last operation's return value must match function's
 }                                   // return value.
-i32 add(i32 a i32 b) {              // function to add 2 numbers together.
+i32 add(a:i32 b:i32) {              // function to add 2 numbers together.
     a + b
 }
-i32 add(i32 a,b) {                  // same function using repeat syntax.
+i32 add(a,b:i32) {                  // same function using repeat syntax.
     a + b
 }
 
 // Define the `=` operator on numbers.  `loperand.function_name(roperands...) -> return { code }`
-? num.=(@num v) {
+fnc num.=(@num v): ? {
     let $0: v               // Move reference into a pseudo-register.
     let $1: ?               // Uninitialized option, so can still be set.
 
