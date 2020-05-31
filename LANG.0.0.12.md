@@ -158,6 +158,8 @@ match a [
 
 ## Functions / Keywords
 ```
+api    # 
+
 # For errors
 error  # Cause a runtime error (these must be dealt with by the programmer).
 break  # 
@@ -197,4 +199,19 @@ del Manually delete a variable or constant.
 // 
 mk Make a file
 rm Remove a file
+```
+
+## Project Attributes
+```
+#![
+      project: app                  # An executable program.
+      project: api                  # In C called a library, in Rust called a crate.  We
+                                    # call it an api.
+      features: asm                 # Allow assembly functions.
+      authors: "Jeron Aldaron Lau"  # List of authors
+      license: "MIT / BSL-1.0"      # License
+      version: "0.0.12"             # Version of project
+      tags: "stn" "nahar" "opt" 
+            "any"                   # Tags to make project easier to find
+]
 ```
