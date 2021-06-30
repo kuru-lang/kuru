@@ -87,6 +87,8 @@ enum Token<'a> {
     Ref,
     /// Assignment Operator `:`
     Assign,
+    /// Access Operator `.`
+    Access,
 }
 
 /// Token iterator on a line.
@@ -148,6 +150,7 @@ impl<'a> Iterator for Tokens<'a> {
             ',' => Some(Ok(Token::Separator)),
             '@' => Some(Ok(Token::Ref)),
             ':' => Some(Ok(Token::Assign)),
+            '.' => Some(Ok(Token::Access)),
             
             '~' => todo!(),
             '!' => todo!(),
@@ -166,7 +169,6 @@ impl<'a> Iterator for Tokens<'a> {
             '\'' => todo!(),
             '<' => todo!(),
             '>' => todo!(),
-            '.' => todo!(),
             '/' => todo!(),
             // Ident
             x if x.is_alphanumeric() => {
