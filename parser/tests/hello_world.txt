@@ -1,0 +1,4 @@
+#!aratar 0.0.27
+
+export fn(hw @Hw):
+    log("Hi!")

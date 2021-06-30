@@ -24,7 +24,7 @@ Only exclusive references can be changed.  You can also only have one exclusive
 reference at a time, so the following will fail to compile:
 
 ```aratar
-fn function(a @Int, b Int) {
+def function(a @Int, b Int) {
     a +: b
 }
 
@@ -34,7 +34,7 @@ function(@var, var)
 
 Note that all values are pass-by-reference in Aratar.  Small types will be
 optimized into pass-by-value by the compiler.  As long as your types are
-subtypes of `.Copy`, you can do the following:
+`&Copy`, you can do the following:
 
 ```aratar
 let a: 4
@@ -64,7 +64,7 @@ either a reference is ceded or the data is copied.  Note also that the rules for
 `let` statements do not follow the same rules for function calls:
 
 ```aratar
-fn function(a Text, b Text) {
+def function(a Text, b Text) {
     log(a, b)
 }
 
@@ -83,13 +83,16 @@ function(a, b) # can call again with the same parameters, but different values.
 This is the same as Rust's "drop" or C++'s "delete":
 
 ```aratar
-# Make `Cede` as supertype of `Type`
-fn Type.Cede(@self) -> Cede {
+# Cede is a method on the `Type` trait that gets called whenever the type leaves
+# scope.
+def MyType.Type.cede() {
     # Do some stuff before the associated data with self gets ceded.
-    Cede()
 }
 ```
 
 ## Justification For `@` Operator
 Most systems programming languages use `&` for references, but this is confusing
-as that also means AND.
+as that also usually means BITWISE AND.
+
+# Next Section
+[Control Flow](control.md)

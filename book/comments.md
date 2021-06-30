@@ -15,4 +15,5 @@ function(1 ##, 2 # Inline Comment #)
 multiplication.  `#` is quicker to type, but is lacking in most languages in
 that you can't do an inline comment.
 
-[Next: Variables](variables.md)
+# Next Section
+[Command Line Arguments](cl_args.md)
