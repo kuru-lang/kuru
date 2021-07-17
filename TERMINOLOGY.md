@@ -1,0 +1,140 @@
+# Terminology
+This is an opinionated list of Aratar approved words and abbreviations for each
+technology concept.  This list is designed to eliminate ambiguities.
+
+Additionally, acronyms are avoided while abbreviations are welcomed as they are
+more meaningful and easier to remember.  Words that are commonly needed to
+describe non-comp-sci things in comp-sci are added, usually with description
+"physical" - especially if they are sometimes used as computer science words.
+
+ - address (addr): physical location address
+ - append: add items to the end of a list (opposite: prepend)
+ - archive (ar): archive of read-only
+ - aspect: aspect ratio, aspect
+ - audio: list of samples
+ - beginning (begin): start, first, beginning of list (opposite of end)
+ - binary (bin): base 2 representation
+ - bundle: bundle, package, zip, archive
+ - capture: take a picture from a camera or get some samples from a microphone
+ - check (chk): check against corruption
+ - class: an educational class with students and a teacher
+ - clear: empty list, clear list, unsized list
+ - clockwise (cw): clockwise movement
+ - compile: compile, build
+ - compiler: a compiler
+ - compiletime: happens during compilation (opposite: runtime)
+ - contains: if it's equivalent to an element within a set/list
+ - constant (const): a value that doesn't change
+ - copy: copy, duplicate
+ - current (cur): the current value (see also: new, old)
+ - cursor (curs): location within a data segment
+ - data: data without a known representation
+ - dimensions (dim): continuous dimensions/size of an object
+ - distribution (dist): distribution of numbers
+ - drive: persitant store, storage device, drive
+ - driver: a person who drives
+ - drop: physically drop an object (opposite of lift)
+ - dumpster: unix trash can, windows recycle bin
+ - exclude: exclude (from a list) (opposite of include)
+ - empty: physically empty
+ - emulator: system emulator, device driver
+ - end: end of list / peek / last (opposite of beginning)
+ - enter: enter, return, newline, finish entry or line
+ - export: export, public, pub
+ - fetch: request data from another system (send + receive)
+ - file: file / project / document
+ - fill/full: physically fill/full
+ - film: list of rasters
+ - finish: end, stop, finish (opposite: start)
+ - fixed (fix): fixed point
+ - function (fn): call-able function
+ - free: no cost (time, storage, or money) / without
+ - garbage: free'd, dropped, old, overwriteable data
+ - get: get (opposite: put)
+ - hash: using a hashing algorithm as in HashMap and HashSet
+ - hexadecimal (hex): base 16 representation
+ - import: include, import, use, copy into file (opposite of export)
+ - include: include (into a list) (opposite of exclude)
+ - input (in): user input / input from system
+ - interface: textual or graphical user interface
+ - intersection: intersection of two sets
+ - is: prefix for testing a condition
+ - key: input from keyboard
+ - leak: a memory leak
+ - length (len): physical distance measurement
+ - lib: statically linked library, shared code
+ - lift: lift (opposite of drop)
+ - line: line, text up until enter
+ - link: url / uri / path link
+ - list: list, vector, vec, string
+ - load: load data from drive
+ - location: place, location
+ - log: logarithm
+ - map: hashmap, etc.
+ - mask: a bitwise AND mask
+ - move: physical motion
+ - new: the new value (see also: current, old)
+ - old: the old value (see also: new, current)
+ - operation / operator (op): operator, operation
+ - output (out): output to system
+ - pack: to align in RAM / store without padding
+ - package: a physical package
+ - page: a page within a printable document
+ - parallel: geometrically parallel
+ - pop: remove from end of list (opposite: yank)
+ - pin: physical gpio pin
+ - place: physically place down something
+ - playback (play): start or resume multimedia
+ - pointer: mouse pointer / touch pointer
+ - prepend: add items to beginning of list (opposite: append)
+ - print: print to a printer
+ - processor: a cpu core
+ - program (prg): app, program, application, binary
+ - pull: physically pull (opposite of push)
+ - push: physically push (opposite of pull)
+ - put: assign, set, put value (opposite: get)
+ - read: get user text until enter
+ - raster: bitmap, image, graphic made from pixels
+ - receive (recv): receive data from another system (opposite: send)
+ - record: repeated captures, record audio, record video, or both
+ - redo: redo (opposite: undo)
+ - reference (ref): pointer, memory address
+ - runner: code that runs tasks
+ - runtime: happens between program start and finish (opposite: compiletime)
+ - save: write data to drive
+ - send: send data to another system (opposite: receive)
+ - set: collection of distinct objects, set (math, set theory)
+ - scan: use a scanner
+ - screen: monitor / touchscreen / 2D physical array of pixels / screen / display
+ - share: grant permissions to open file in program other than one that made it
+ - size: len, length, size, (discrete) dimensions - of array
+ - speaker: audio output device / speaker
+ - start: main, start, begin, execute (opposite: finish)
+ - subset: part of a set
+ - subsystem (subsys): individual hardware component
+ - superset: set that contains everything in another
+ - synchronize (sync): synchronize data changes
+ - synchronous (syn): thread, process, isolate, process, synchronous task
+ - system (sys): hardware + OS
+ - task: asynchronous task, future, promise
+ - terminal (term): console / terminal / command prompt
+ - transparent: partially or fully visually transparent
+ - trash: physical garbage / trash
+ - type: data type, data definition, memory layout, classification
+ - undo: undo (opposite: redo)
+ - union: union of multiple sets / discriminated union / enum
+ - video: audio + film(video w/o audio), video, audiovideo
+ - waste: wasted clock cycles / kB etc.
+ - widdershins (ws): anticlockwise, counterclockwise movement
+ - widget: an element of an interface
+ - window: a physical window
+ - world: map of a location describing what's there
+ - write: print line, output text to terminal (usually for debugging).
+ - yank: remove from beginning of list
+ - zip: iterate through together as a tuple
+
+## Corrections
+ - "type your name" → "enter your name"
+
+## Differences
+- A `link` happens at runtime, and `include` happens at compile time (the code is included in your compiled).
