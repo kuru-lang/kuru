@@ -1,0 +1,4 @@
+#!aldru 0.1.0
+
+export fn(hw @Hw):
+    hw.log("Hi!")

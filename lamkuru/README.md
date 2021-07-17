@@ -1,0 +1,2 @@
+# Lamkuru
+Experimental Programming Language
