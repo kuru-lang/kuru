@@ -1,0 +1,10 @@
+#!aratar 0.0.17 main
+
+import[sys[write]]
+export[start]
+
+# Define program's entry point (set on first line of file)
+def start() {
+    # Write "Hello, world!" to terminal
+    write("Hello, world!")
+}
