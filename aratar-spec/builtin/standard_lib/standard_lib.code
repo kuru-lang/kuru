@@ -1,0 +1,24 @@
+#!aratar 0.0.15
+# Copyright (c) 2019-2020 Jeron Aldaron Lau
+#
+# Licensed under the Apache License, Version 2.0, <LICENSE-APACHE or
+# https://apache.org/licenses/LICENSE-2.0>, or the Zlib License, <LICENSE-ZLIB
+# or http://opensource.org/licenses/Zlib>, at your option. This file may not be
+# copied, modified, or distributed except according to those terms.
+#
+#? Aratar Standard Library
+#? =======================
+#? This is the Aratar standard library, a collection of portable abstractions
+#? for your code to use.  Everything can be used as it is listed, no need to
+#? import it, as the standard library is automatically included at the top of
+#? each file.
+
+# Exports
+
+let Bool: Bool
+let TRUE: Bool.TRUE
+let FALSE: Bool.FALSE
+let all: Bool.all
+let any: Bool.any
+let not: Bool.not
+let one: Bool.one

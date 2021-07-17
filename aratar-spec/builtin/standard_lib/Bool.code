@@ -1,0 +1,113 @@
+#!aratar 0.0.15
+#
+# Aratar Standard Library
+#
+# Copyright (c) 2019-2020 Jeron Aldaron Lau
+# 
+# Licensed under the Apache License, Version 2.0, <LICENSE-APACHE or
+# https://apache.org/licenses/LICENSE-2.0>, or the Zlib License, <LICENSE-ZLIB
+# or http://opensource.org/licenses/Zlib>, at your option. This file may not be
+# copied, modified, or distributed except according to those terms.
+# 
+#? Documentation for `Bool` module is not re-exported.
+
+# The boolean type, either `TRUE` or `FALSE`.
+# 
+# Functional operators
+# ====================
+# Instead using conventional **and** (`&&`), **or** (`||`), and **not** (`!`)
+# operators on a boolean, use the following functions:
+#  - `all[]`
+#  - `not[]`
+#  - `any[]`
+enum Bool [
+    FALSE: 0
+    TRUE : 1
+]
+
+let Text.from: $TextFrom(Bool)
+
+# Returns `TRUE` only if all of the `Bool`s are `TRUE`.
+# 
+# Examples
+# ========
+# ```
+# assert(all[Bool.TRUE] = Bool.TRUE)
+# assert(all[Bool.FALSE] = Bool.TRUE)
+# assert(all[Bool.TRUE, Bool.FALSE] = Bool.FALSE)
+# assert(not[Bool.FALSE, Bool.FALSE, Bool.FALSE] = Bool.FALSE)
+# ```
+let all: fn[values] -> Bool {
+    let return @: TRUE
+    for i :: values {
+        if i = FALSE {
+            ret: FALSE
+        }
+    }
+    return
+}
+
+# Returns `TRUE` only if all of the `Bool`s are `FALSE`.
+# 
+# Examples
+# ========
+# ```
+# assert(not[Bool.TRUE] = Bool.FALSE)
+# assert(not[Bool.FALSE] = Bool.TRUE)
+# assert(not[Bool.TRUE, Bool.FALSE] = Bool.FALSE)
+# assert(not[Bool.FALSE, Bool.FALSE, Bool.FALSE] = Bool.TRUE)
+# ```
+let not: fn[values] -> Bool {
+    let return @: TRUE
+    for i :: values {
+        if i = TRUE {
+            ret: FALSE
+        }
+    }
+    return
+}
+
+# Returns `TRUE` if any of the `Bool`s are `TRUE`, `FALSE` otherwise.
+#
+# Examples
+# ========
+# ```
+# assert(any[Bool.TRUE] = TRUE)
+# assert(any[Bool.FALSE] = FALSE)
+# assert(any[Bool.TRUE, Bool.FALSE] = TRUE)
+# assert(any[Bool.FALSE, Bool.FALSE, Bool.FALSE] = FALSE)
+# ```
+let any: fn[values] -> Bool {
+    let return @: FALSE
+    for i :: values {
+        if i = TRUE {
+            ret: TRUE
+        }
+    }
+    return
+}
+
+# Returns `TRUE` if exactly 1 of the `Bool`s are `TRUE`, `FALSE` otherwise.
+#
+# Examples
+# ========
+# ```
+# assert(any[Bool.TRUE] = TRUE)
+# assert(any[Bool.FALSE] = FALSE)
+# assert(any[Bool.TRUE, Bool.FALSE] = TRUE)
+# assert(any[Bool.FALSE, Bool.FALSE, Bool.FALSE] = FALSE)
+# assert(any[Bool.TRUE, Bool.TRUE] = FALSE)
+# ```
+let one: fn[values] -> Bool {
+    let found @: FALSE
+    let return @: TRUE
+    for i :: values {
+        if i = TRUE {
+            if found [
+                = TRUE { return: FALSE }
+                = FALSE { found: TRUE }
+            ]
+        }
+    }
+    all[return, found]
+}

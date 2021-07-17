@@ -1,0 +1,19 @@
+#!aratar 0.1
+
+def min: self Num, other Num -> Num {
+    # This is an example of a Dijkstra selector.  Compilation will fail if it's
+    # possible for overlapping ranges to return different results.
+    if self [
+        _a: <= other { self }
+        _a: >= other { other }
+    ] if self
+} def min
+
+def max: self Num, other Num -> Num {
+    # This is an example of a Dijkstra selector.  Compilation will fail if it's
+    # possible for overlapping ranges to return different results.
+    if self [
+        _a: <= other { other }
+        _a: >= other { self }
+    ] if self
+} def max

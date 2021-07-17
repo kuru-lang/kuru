@@ -1,0 +1,67 @@
+#!aratar 0.1
+
+# Optional type, a YES or NO value with optional associated data.
+#
+# Comparsions
+# ===========
+# Using a comparision operator returns a builder for `Opt<>` (a boolean).  The
+# actual type of the builder is an `Opt<T>`, where T is the type of the things
+# being compared.
+
+# ```aratar
+# a <Opt>: (2 = 2)
+# a Opt: (2 = 2)
+# ```
+Opt<T?, E?> [
+    # False, None, Error
+    NO(error E): 0
+    # True, Some, Ok
+    YES(some T): 1
+] Opt
+
+# Comparison on optional to another optional.
+#
+# - `(3 = 3) # Returns Yes(3)`
+# - `Yes(3) = 3 # Returns Yes(3)`
+# - so then,
+# - `3 = 3 = 3 # Returns Yes(3)`
+#
+# - `(Yes(3) = Yes(2)) = NO()`
+Opt<T?, E?>=(self, other Opt<T?, E?>) -> Opt<Opt<T?, E?>, ()> {
+    if self [
+        other: (YES(other))
+        _    : (NO)
+    ] self
+} Opt=()
+
+# Negation on boolean.
+Opt<T?, E?>.not(self, other Opt) -> Opt {
+    if self [
+        NO : (YES)
+        YES: (NO)
+    ] self
+} Opt.not()
+
+# Logical and
+Opt<T?, E?>.and(self, other Opt) -> Opt {
+    if self [
+        YES: other
+        NO : (NO)
+    ] self
+} Opt.and()
+
+# Logical or (inclusive)
+Opt<T?, E?>.or(self, other Opt) -> Opt {
+    if self [
+        YES: YES
+        NO : other
+    ] self
+} Opt.or()
+
+# Logical xor
+Opt<T?, E?>.xor(self, other Opt) -> Opt {
+    if self [
+        YES: not other
+        NO : other
+    ] self
+} Opt.xor()

@@ -1,0 +1,19 @@
+#!aratar 0.1
+
+# A complex number type, requires Num trait
+Complex<NUM> {
+    # Real part of a complex number
+    real: NUM
+    # Imaginary part of a complex number
+    imag: NUM
+} Complex<NUM>
+
+# Constructor for Complex
+Complex<NUM>(self, real NUM, imag NUM) -> Complex<NUM>:
+    Complex { real, imag }
+: Complex<NUM>()
+
+# Comparison on boolean
+Complex<NUM> = (self, other Complex) -> Bool:
+    all(self.real = other.real, self.imag = other.imag)
+: Complex<NUM> = ()

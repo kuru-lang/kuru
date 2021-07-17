@@ -1,0 +1,52 @@
+#!aratar 0.1
+
+## An list is like an array in C.  It can act like a python list if it's
+## resizeable (it is by default, unless you don't resize it).
+
+# A function with the same name as the file is called when the file is executed.
+#
+# No return type.
+#
+# Requires `journal` hardware interrupters (either text display, serial port or
+# web console).  Each call to `journal[]` returns an asynchronous future that
+# can be `.await()`ed.  You don't have to though.
+def list() \\ journal {
+    journal["Creating 3 immutable lists (last 2 are identical)…"]
+
+    let list: [0; 10]
+    let list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    let list [Int; 10]: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    journal["First element =", list.get(0), "…"]
+    journal["Printing first 5 elements 3 different ways…"]
+    journal[list.get(0..5)]
+    journal[list.get(..5)]
+    journal[list.get(..4.to_inclusive())]
+
+    # Assertions are run at compile time, so they have keyword syntax instead of
+    # method syntax.
+    assert [1, 2, 3, 4, 5] = list.get(0..5)
+    assert [1, 2, 3, 4, 5] = list.get(..5)
+    assert [1, 2, 3, 4, 5] = list.get(..4.to_inclusive())
+
+    journal["Printing last 4 elements…"]
+    journal[list.get(6..10)]
+    journal[list.get(-4..)]
+    journal[list.get(6..)]
+
+    assert [7, 8, 9, 10] = list.get(6..10)
+    assert [7, 8, 9, 10] = list.get(-4..)
+    assert [7, 8, 9, 10] = list.get(6..)
+
+    journal["Printing middle 6 elements"]
+    journal[list.get(2..7.inclusive())]
+    journal[list.get(2..8)]
+    assert [3, 4, 5, 6, 7, 8] = list[2..7.inclusive()]
+    assert [3, 4, 5, 6, 7, 8] = list[2..8]
+
+    journal["Adding lists together"]
+    assert [1, 2] + [3, 4] = [4, 6]
+
+    journal["Concatenating lists together"].await()
+    assert [1, 2] ++ [3, 4] = [1, 2, 3, 4]
+} list()
